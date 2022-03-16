@@ -13,49 +13,29 @@ namespace SmartSchool.API.Controllers
     [ApiController]
     public class AlunoController : ControllerBase
     {
-        private readonly SmartContext _context;
         private readonly IRepository _repository;
 
-        public AlunoController(SmartContext smartSchoolContext, 
-                               IRepository repository)
+        public AlunoController(IRepository repository)
         {
-            _context = smartSchoolContext;
             _repository = repository;
         }
 
         [HttpGet]
-        public ActionResult Get()
+        public IActionResult Get()
         {
-            var query = _repository.GetAllAlunos();
+            var query = _repository.GetAllAlunos(true);
             return Ok(query);
         }
 
-        //parametro tipado
         [HttpGet("{id:int}")]
-        //queryString -> api/aluno/ById? id = 2
-        //[HttpGet("ById/{id}")]
-        public ActionResult GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
-            if (aluno == null) return BadRequest("O aluno com o Id: " + id + " não foi encontrado!");
-
-            return Ok(aluno);
-        }
-
-        //parametro normal
-        //[HttpGet("{name}")]
-        //queryString http://localhost:5000/api/aluno/ByName?nome=Marta&sobrenome=Kent
-        [HttpGet("ByName")]
-        public ActionResult GetByName(string nome, string sobrenome)
-        {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Nome.Contains(nome) && a.Sobrenome.Contains(sobrenome));
-            if (aluno == null) return BadRequest("O aluno com o nome: " + nome + " não foi encontrado!");
-
+            var aluno = _repository.GetAlunoById(id, false);
             return Ok(aluno);
         }
 
         [HttpPost]
-        public ActionResult Post(Aluno aluno)
+        public IActionResult Post(Aluno aluno)
         {
             _repository.Add(aluno);
 
@@ -71,7 +51,7 @@ namespace SmartSchool.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
-            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var alu = _repository.GetAlunoById(id);
             if (alu == null) return BadRequest("Aluno não foi encontrado!");
 
             _repository.Update(aluno);
@@ -86,9 +66,9 @@ namespace SmartSchool.API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public ActionResult Patch(int id, Aluno aluno)
+        public IActionResult Patch(int id, Aluno aluno)
         {
-            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var alu = _repository.GetAlunoById(id);
             if (alu == null) return BadRequest("Professor não encontrado");
 
             _repository.Update(aluno);
@@ -103,9 +83,9 @@ namespace SmartSchool.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var aluno = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var aluno = _repository.GetAlunoById(id);
             if (aluno == null) return BadRequest("Aluno não encontrado");
 
             _repository.Remove(aluno);
