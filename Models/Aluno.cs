@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SmartSchool.API.Models
 {
@@ -9,19 +10,30 @@ namespace SmartSchool.API.Models
 
         }
 
-        public Aluno(int id, string nome, string sobrenome, string telefone)
+        public Aluno(int id, 
+                     int matricula, 
+                     string nome, 
+                     string sobrenome, 
+                     string telefone, 
+                     DateTime dataNascimento)
         {
-            Id = id;
-            Nome = nome;
-            Sobrenome = sobrenome;
-            Telefone = telefone;
+            this.Id = id;
+            this.Matricula = matricula;
+            this.Nome = nome;
+            this.Sobrenome = sobrenome;
+            this.Telefone = telefone;
+            this.DataNascimento = dataNascimento;
         }
 
         public int Id { get; set; }
+        public int Matricula { get; set; }
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
         public string Telefone { get; set; }
-
+        public DateTime DataNascimento { get; set; }
+        public DateTime DataInicio { get; set; } = DateTime.Now;
+        public DateTime? DataFim { get; set; } = null;
+        public bool Ativo { get; set; } = true;
         public IEnumerable<AlunoDisciplina> AlunosDisciplinas { get; set; }
     }
 }
