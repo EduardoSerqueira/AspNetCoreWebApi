@@ -17,6 +17,10 @@ namespace SmartSchool.API.Helpers
                     dest => dest.Idade,
                     opt => opt.MapFrom(src => src.DataNascimento.pegarIdadeAtual())
                 );
+
+            CreateMap<AlunoDto, Aluno>();
+
+            CreateMap<Aluno, AlunoRegistrarDto>().ReverseMap();
         }
     }
 }
